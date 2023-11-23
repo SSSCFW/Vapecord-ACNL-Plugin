@@ -8,6 +8,7 @@ namespace CTRPluginFramework {
 	namespace GameKeyboard {
 		bool 				Write(const std::string& str);
 		bool		 		CopySelected(std::string& str);
+		bool 				Delete(void);
 		bool 				DeleteSelected(void);
 		bool 				IsOpen();
 		bool				IsEmpty();
