@@ -82,7 +82,7 @@ namespace CTRPluginFramework {
 
 			Inventory::ReadSlot(0, val);
 			if(Wrap::KB<u32>(Language->Get("ENTER_ID"), true, 8, *(u32 *)&val, *(u32 *)&val, TextItemChange)) 		
-				Inventory::WriteSlot(0, val);
+				Inventory::WriteSlot(1, val);
 		}
 		
 		else if(entry->Hotkeys[1].IsPressed()) {
@@ -109,7 +109,7 @@ namespace CTRPluginFramework {
 			if(PlayerClass::GetInstance()->GetWorldCoords(&x, &y)) {
 				Item *item = GameHelper::GetItemAtWorldCoords(x, y);
 				if(item) {
-					Inventory::WriteSlot(0, *item);
+					Inventory::WriteSlot(15, *item);
 					OSD::Notify(Utils::Format("Item ID: %08X", *(u32 *)item));
 				}
 			}
