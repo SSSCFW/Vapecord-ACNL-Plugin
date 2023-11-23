@@ -416,6 +416,31 @@ namespace CTRPluginFramework {
 		MISC->Append(new MenuEntry("FAST_GAME_SPEED", speedentry, "FAST_GAME_SPEED_NOTE")),
 		menu->Append(MISC);
 
+	/////////////////////
+	/*Addon Codes Folder*/
+	/////////////////////
+		MenuFolder *ADDON = new MenuFolder("ADDON_CODES");		
+		ADDON->Append(new MenuEntry("Text_To_Cheats", TextToCheats, "Text_To_Cheats_NOTE")),
+		ADDON->Append(new MenuEntry("GO_FAST", OnlineFastGame, "Only JPN")),
+		ADDON->Append(new MenuEntry("Canceled_Return", CanceledReturn, "Only JPN\nONにした後にリロード必要あり。常時ONだと帰れなくなる。(全プレイヤー)")),
+		ADDON->Append(EntryWithHotkey(new MenuEntry("Character_CHANGE", CharacterChange, "Character_CHANGE_NOTE"), { 
+			Hotkey(Key::R | Key::X, "Key")
+		})),
+		ADDON->Append(new MenuEntry("MoonJumpCstick", MoonJumpCpad, "MoonJumpCstick_NOTE")),
+		ADDON->Append(new MenuEntry("ToolsChanger", ToolsChanger, "L or R | C-stick\nOnly JPN")),
+		ADDON->Append(new MenuEntry("RemoveRemakeFlag", nullptr, RemoveRemakeFlag, "Only JPN\n破壊家具対策用。オンラインでは使用した後破壊家具の原因を回収する必要がある。")),
+		ADDON->Append(new MenuEntry("IslandClosure", IslandClosure, "Only JPN")),
+		ADDON->Append(new MenuEntry("ShowChatMessage", ShowChatMessage, "")),
+		ADDON->Append(new MenuEntry("ChatButton", ChatButton, "")),
+		ADDON->Append(new MenuEntry("EveryoneAnimChange", EveryoneAnimChange, anim_settings, "")),
+		ADDON->Append(new MenuEntry("Isabelle_Skip", IsabelleSkip, "")),
+		ADDON->Append(new MenuEntry("ShowAnimID", ShowAnimID, "")),
+		//ADDON->Append(new MenuEntry("Discordにチャットを送信", SendDiscordMessage, "")),
+		//ADDON->Append(new MenuEntry("discord send", nullptr, http_test, "")),
+		ADDON->Append(new MenuEntry("soc memory", nullptr, soc_memory, "")),
+		ADDON->Append(new MenuEntry("soc memory exit", nullptr, soc_memory_exit, "")),
+		menu->Append(ADDON);
+
 	////////////////////
 	/*Dev Codes Folder*/
 	////////////////////
@@ -467,5 +492,6 @@ namespace CTRPluginFramework {
 		PluginMenuData::SetUp(CHAC, true);
 		PluginMenuData::SetUp(EXTC);
 		PluginMenuData::SetUp(MISC);
+		PluginMenuData::SetUp(ADDON);
 	}
 }

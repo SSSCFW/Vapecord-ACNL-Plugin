@@ -7,9 +7,12 @@
 #include "Helpers/QuickMenu.hpp"
 #include "Helpers/PluginMenuData.hpp"
 #include "NonHacker.hpp"
+#include "cheats.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "csvc.h"
+
 
 namespace CTRPluginFramework {
 	static const std::string Note = "Creator: Lukas#4444 (RedShyGuy) \n\n"
@@ -25,6 +28,19 @@ namespace CTRPluginFramework {
 	void InitMenu(PluginMenu *menu);
 	void GetPlayerInfoData(void);
 	void RCO(void);
+
+	void GetMessage_p1(void);
+	void GetMessage_p2(void);
+	void GetMessage_p3(void);
+	void GetMessage_p4(void);
+	void GetMessage_p1_discord(void);
+	void GetMessage_p2_discord(void);
+	void GetMessage_p3_discord(void);
+	void GetMessage_p4_discord(void);
+	void GetAnim_p1(void);
+	void GetAnim_p2(void);
+	void GetAnim_p3(void);
+	void GetAnim_p4(void);
 
 /*
 Will be called at the start of the plugin to load the language, colors and the dev check
@@ -207,6 +223,11 @@ prevent any issues with freezing of the plugin
 			return 0;
 		}
 
+		if (System::IsCitra()){
+			soc_memory_init();
+		}
+
+
 	//Check if the game has the correct version
 		CheckGameVersion();
 
@@ -222,6 +243,7 @@ prevent any issues with freezing of the plugin
 		InitMenu(menu);
 
 		ReserveItemData(ItemList);
+		ReserveUndefinedItemData(UndefItemList);
 
 		menu->OnFirstOpening = StartingMsg;
 

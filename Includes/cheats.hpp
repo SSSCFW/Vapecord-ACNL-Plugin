@@ -17,6 +17,32 @@ namespace CTRPluginFramework {
 	extern const std::string g_Empty;
 	
 	extern const Color pColor[];
+	
+	void AnimChange(Keyboard& keyboard, KeyboardEvent& event);
+
+	void TextToCheats(MenuEntry *entry);
+	void CanUseCommand(bool);
+
+	void OnlineFastGame(MenuEntry *entry);
+	void CanceledReturn(MenuEntry *entry);
+	void CharacterChange(MenuEntry *entry);
+	void MoonJumpCpad(MenuEntry *entry);
+	void ToolsChanger(MenuEntry *entry);
+	void RemoveRemakeFlag(MenuEntry *entry);
+	void IslandClosure(MenuEntry *entry);
+	void ShowChatMessage(MenuEntry *entry);
+	void ChatButton(MenuEntry *entry);
+	void EveryoneAnimChange(MenuEntry *entry);
+	void anim_settings(MenuEntry *entry);
+	void AnimChange(Keyboard& keyboard, KeyboardEvent& event);
+	void IsabelleSkip(MenuEntry *entry);
+	void ShowAnimID(MenuEntry *entry);
+	
+	void http_test(MenuEntry *entry);
+	void SendDiscordMessage(MenuEntry *entry);
+	void soc_memory(MenuEntry *entry);
+	void soc_memory_init(void);
+	void soc_memory_exit(MenuEntry *entry);
 
 //Save Codes Folder
 	void townnamechanger(MenuEntry* entry);

@@ -989,6 +989,32 @@ FAST_TEXT_SPEED_NOTE :: Lets you speed up text boxes.
 FAST_GAME_SPEED :: Fast Game Speed
 FAST_GAME_SPEED_NOTE :: Lets you speed up the game.
 
+#ADDON
+ADDON_CODES :: ADDON
+
+Text_To_Cheats :: Text To Cheats
+Text_To_Cheats_NOTE :: You can search for items in the in-game chat.\nType a letter and press B+R (or L) to select it, or X+DRight to get the item.
+
+GO_FAST :: FastGame Kappei/Station
+
+Canceled_Return :: (Island)Canceled Return
+Character_CHANGE :: Character change
+Character_CHANGE_NOTE :: Select a character in the chat and press a key to convert the character; it will be read from a txt file on the SD card.
+
+MoonJumpCstick :: MoonJumpCstick
+MoonJumpCstick_NOTE :: Cstick + ZL\nCstick-Left + ZL release
+
+RemoveRemakeFlag :: RemoveRemakeFlag
+IslandClosure :: IslandClosure
+
+ToolsChanger :: ToolsChanger
+
+ShowChatMessage :: ShowChatMessage
+ChatButton :: ChatButton
+EveryoneAnimChange :: EveryoneAnimChange
+Isabelle_Skip :: Isabelle Skip
+ShowAnimID :: ShowAnimID
+
 #Other Stuff
 
 #Dumper & Restorer & Deleter

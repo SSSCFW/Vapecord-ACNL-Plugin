@@ -111,6 +111,21 @@ Result svcUnmapProcessMemoryEx(Handle process, u32 destAddress, u32 size);
  * @sa svcControlMemory
  */
 Result svcControlMemoryEx(u32* addr_out, u32 addr0, u32 addr1, u32 size, MemOp op, MemPerm perm, bool isLoader);
+
+/**
+ * @brief Controls memory mapping, this version removes all checks which were being done
+ * The only operations supported are MEMOP_FREE, MEMOP_ALLOC and MEMOP_ALLOC_LINEAR
+ * All memory allocated with this svc, must be freed with this svc as well
+ * @param[out] addr_out The virtual address resulting from the operation. Usually the same as addr0.
+ * @param addr0    The virtual address to be used for the operation.
+ * @param size     The requested size for @ref MEMOP_ALLOC and @ref MEMOP_ALLOC_LINEAR.
+ * @param op       Operation flags. See @ref MemOp.
+ * @param perm     A combination of @ref MEMPERM_READ and @ref MEMPERM_WRITE
+ *                 Value 0 is used when unmapping memory.
+ * @sa svcControlMemory
+ */
+Result svcControlMemoryUnsafe(u32 *out, u32 addr0, u32 size, MemOp op, MemPerm perm);
+
 ///@}
 
 ///@name System

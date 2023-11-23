@@ -17,6 +17,10 @@ namespace CTRPluginFramework {
 	extern int ItemFileLenght;
 	extern bool ItemFileExists;
 
+	extern ItemVec* UndefItemList;
+	extern int UndefItemFileLenght;
+	extern bool UndefItemFileExists;
+
 	using slotReader = void(*)(u32, u8);
 
 	namespace Inventory {
@@ -35,6 +39,7 @@ namespace CTRPluginFramework {
 	}
 
 	void ReserveItemData(ItemVec* out);
+	void ReserveUndefinedItemData(ItemVec* out);
 	int ItemSearch(const std::string& match, ItemVec& out);
 	std::string ItemIDSearch(Item ItemID);
 }

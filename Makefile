@@ -37,12 +37,12 @@ CFLAGS		:=	$(ARCH) -Os -mword-relocations \
 
 CFLAGS		+=	$(INCLUDE) -D__3DS__
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17
+CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17 -Wno-psabi
 
 ASFLAGS		:=	$(ARCH)
 LDFLAGS		:= -T $(TOPDIR)/3gx.ld $(ARCH) -Os -Wl,--gc-sections,--strip-discarded,--strip-debug
 
-LIBS		:= -lctrpf -lctru -lmbedtls -lmbedcrypto -lmbedx509 -lminizip -lctru -lz -lm
+LIBS		:= -lctrpf -lcurl -lmbedtls -lmbedcrypto -lmbedx509 -lminizip -lctru -lz -lm
 LIBDIRS		:= 	$(CTRPFLIB) $(CTRULIB) $(PORTLIBS)
 
 #---------------------------------------------------------------------------------

@@ -132,9 +132,9 @@ namespace CTRPluginFramework {
 
 	// Only JPN
 	// Cstickのムーンジャンプ
+	static int moon_value=0;
 	void MoonJumpCpad(MenuEntry *entry) {
 		u32 i = PlayerClass::GetInstance()->Offset(0x8C6);
-		static int moon_value=0;
 		if (Controller::IsKeysDown(Key::ZL + Key::CStickLeft)) moon_value = 0;
 		if (Controller::IsKeysDown(Key::ZL + Key::CStickUp)) moon_value = 1;
 		if (Controller::IsKeysDown(Key::ZL + Key::CStickDown)) moon_value = 2;
@@ -222,13 +222,13 @@ namespace CTRPluginFramework {
 //#################################################
 	// チャットのメッセージをスクリーンに表示
 	// Display chat messages on screen
-	static std::vector<std::string> strings1 = { "", "", "", "", "" };
+	static std::vector<std::string> chat_text = { "", "", "", "", "" };
 
 	void reset_message(void) {
 		for (int i = 0; i<4; i++) {
 			NonHacker *nHack = new NonHacker(i);
 			nHack->ClearPlayerMessage();
-			strings1[i] = "";
+			chat_text[i] = "";
 			delete nHack;
 		}
 	}
@@ -236,36 +236,36 @@ namespace CTRPluginFramework {
 	void GetMessage_p1(void) {	
 		NonHacker *nHack1 = new NonHacker(0);
 		std::string PlayerText1 = nHack1->GetPlayerMessage();
-		if(PlayerText1.empty()) PlayerText1 = strings1[0];
+		if(PlayerText1.empty()) PlayerText1 = chat_text[0];
 		
-		strings1[0] = (PlayerText1);
+		chat_text[0] = (PlayerText1);
 		delete nHack1;
 	}
 
 	void GetMessage_p2(void) {	
 		NonHacker *nHack2 = new NonHacker(1);
 		std::string PlayerText2 = nHack2->GetPlayerMessage();
-		if(PlayerText2.empty()) PlayerText2 = strings1[1];
+		if(PlayerText2.empty()) PlayerText2 = chat_text[1];
 		
-		strings1[1] = (PlayerText2);
+		chat_text[1] = (PlayerText2);
 		delete nHack2;
 	}
 
 	void GetMessage_p3(void) {	
 		NonHacker *nHack3 = new NonHacker(2);
 		std::string PlayerText3 = nHack3->GetPlayerMessage();
-		if(PlayerText3.empty()) PlayerText3 = strings1[2];
+		if(PlayerText3.empty()) PlayerText3 = chat_text[2];
 		
-		strings1[2] = (PlayerText3);
+		chat_text[2] = (PlayerText3);
 		delete nHack3;
 	}
 
 	void GetMessage_p4(void) {	
 		NonHacker *nHack4 = new NonHacker(3);
 		std::string PlayerText4 = nHack4->GetPlayerMessage();
-		if(PlayerText4.empty()) PlayerText4 = strings1[3];
+		if(PlayerText4.empty()) PlayerText4 = chat_text[3];
 		
-		strings1[3] = (PlayerText4);
+		chat_text[3] = (PlayerText4);
 		delete nHack4;
 	}
 	
@@ -275,10 +275,10 @@ namespace CTRPluginFramework {
 		
 		static constexpr u8 YPositions1[4] = { 189, 201, 213, 225 };
 
-		screen.DrawSysfont(pColor[0] << "P1: " << Color(0xFFFFFFFF) << strings1[0], 0, YPositions1[0]);
-		screen.DrawSysfont(pColor[1] << "P2: " << Color(0xFFFFFFFF) << strings1[1], 0, YPositions1[1]);
-		screen.DrawSysfont(pColor[2] << "P3: " << Color(0xFFFFFFFF) << strings1[2], 0, YPositions1[2]);
-		screen.DrawSysfont(pColor[3] << "P4: " << Color(0xFFFFFFFF) << strings1[3], 0, YPositions1[3]);
+		screen.DrawSysfont(pColor[0] << "P1: " << Color(0xFFFFFFFF) << chat_text[0], 0, YPositions1[0]);
+		screen.DrawSysfont(pColor[1] << "P2: " << Color(0xFFFFFFFF) << chat_text[1], 0, YPositions1[1]);
+		screen.DrawSysfont(pColor[2] << "P3: " << Color(0xFFFFFFFF) << chat_text[2], 0, YPositions1[2]);
+		screen.DrawSysfont(pColor[3] << "P4: " << Color(0xFFFFFFFF) << chat_text[3], 0, YPositions1[3]);
 
 		return 1;
 	}
@@ -306,30 +306,30 @@ namespace CTRPluginFramework {
 //#################################################
 	// アニメidをスクリーンに表示
 	// Animation id on screen
-	static std::vector<std::string> strings2 = { "", "", "", "" };
+	static std::vector<std::string> anim_text = { "", "", "", "" };
 
 	void GetAnim_p1(void) {	
 		if(!PlayerClass::GetInstance()->GetCoordinates())
 			return;
-		strings2[0] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance()->GetAnimation(), *PlayerClass::GetInstance()->GetSnake()));
+		anim_text[0] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance()->GetAnimation(), *PlayerClass::GetInstance()->GetSnake()));
 	}
 
 	void GetAnim_p2(void) {	
 		if(!PlayerClass::GetInstance(1)->GetCoordinates())
 			return;
-		strings2[1] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(1)->GetAnimation(), *PlayerClass::GetInstance(1)->GetSnake()));
+		anim_text[1] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(1)->GetAnimation(), *PlayerClass::GetInstance(1)->GetSnake()));
 	}
 
 	void GetAnim_p3(void) {	
 		if(!PlayerClass::GetInstance(2)->GetCoordinates())
 			return;
-		strings2[2] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(2)->GetAnimation(), *PlayerClass::GetInstance(2)->GetSnake()));
+		anim_text[2] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(2)->GetAnimation(), *PlayerClass::GetInstance(2)->GetSnake()));
 	}
 
 	void GetAnim_p4(void) {	
 		if(!PlayerClass::GetInstance(3)->GetCoordinates())
 			return;
-		strings2[3] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(3)->GetAnimation(), *PlayerClass::GetInstance(3)->GetSnake()));
+		anim_text[3] = (Utils::Format("%02X / %03X", *PlayerClass::GetInstance(3)->GetAnimation(), *PlayerClass::GetInstance(3)->GetSnake()));
 	}
 	
 	bool animOSD(const Screen &screen) {
@@ -338,10 +338,10 @@ namespace CTRPluginFramework {
 		
 		static constexpr u8 YPositions2[4] = { 141, 153, 165, 177 };
 
-		screen.DrawSysfont(pColor[0] << "P1: " << Color(0xFFFFFFFF) << strings2[0], 0, YPositions2[0]);
-		screen.DrawSysfont(pColor[1] << "P2: " << Color(0xFFFFFFFF) << strings2[1], 0, YPositions2[1]);
-		screen.DrawSysfont(pColor[2] << "P3: " << Color(0xFFFFFFFF) << strings2[2], 0, YPositions2[2]);
-		screen.DrawSysfont(pColor[3] << "P4: " << Color(0xFFFFFFFF) << strings2[3], 0, YPositions2[3]);
+		screen.DrawSysfont(pColor[0] << "P1: " << Color(0xFFFFFFFF) << anim_text[0], 0, YPositions2[0]);
+		screen.DrawSysfont(pColor[1] << "P2: " << Color(0xFFFFFFFF) << anim_text[1], 0, YPositions2[1]);
+		screen.DrawSysfont(pColor[2] << "P3: " << Color(0xFFFFFFFF) << anim_text[2], 0, YPositions2[2]);
+		screen.DrawSysfont(pColor[3] << "P4: " << Color(0xFFFFFFFF) << anim_text[3], 0, YPositions2[3]);
 
 		return 1;
 	}
@@ -609,22 +609,23 @@ namespace CTRPluginFramework {
 		
 	}
 
+	//直でDiscord API叩くより自作API経由したほうが軽い
+	//std::string url = "https://discord.com/api/webhooks/";
+	std::string url = "http://192.168.11.6:19569/discord/post/";
+
 	void http_test(MenuEntry *entry) {
         std::string data = "{\"username\":\"CTRPF\",\"content\":\"aaa\"}";
 
         std::vector<u8> out;
         CURLcode res;
-        if ((res = Curl::Post("https://discord.com/api/webhooks/1174299158484635698/Ms-ytTQxnEjyIVZQr6ZQAxKJNTfiQsabMB4xHj8s0nPRJouCOX6UtpSbBz1s5d8oKJds", data.c_str(), out)) == CURLE_OK)
+        if ((res = Curl::Post(url.c_str(), data.c_str(), out)) == CURLE_OK)
             MessageBox("success!")();
         else
             OSD::Notify(Utils::Format("failed %d", res));
         Sleep(Seconds(1));
         return;
 	}
-
-	//直でDiscord API叩くより自作API経由したほうが軽い
-	//std::string url = "https://discord.com/api/webhooks/1175655952914067496/0W3pwTjwIvPmuZ07z-qYaImOBHNw6FM9A1oeyhaORTZlKAaV24b1GqUgZow2avJLuioP";
-	std::string url = "http://192.168.11.6:19569/discord/post/";
+	
 	void chat_send_discord(std::string text) {	
 		std::string data = "{\"username\":\"とび森チャット\",\"content\":\""+text+"\"}";
         std::vector<u8> out;

@@ -10,6 +10,11 @@ namespace CTRPluginFramework {
 	int ItemFileLenght = 0;
 	bool ItemFileExists = true;
 
+	ItemVec* UndefItemList = new ItemVec();
+	int UndefItemFileLenght = 0;
+	bool UndefItemFileExists = true;
+
+
 //reserver data into pointer so search doesnt take so long
 	void ReserveItemData(ItemVec* out) {
 		if(out == nullptr) 
@@ -44,6 +49,42 @@ namespace CTRPluginFramework {
 			out->Name.push_back(Name);
 			out->ID.push_back(ID);
 			ItemFileLenght++; //adds to file lenght to know how many items are in it
+		}
+	}
+
+	
+	void ReserveUndefinedItemData(ItemVec* out) {
+		if(out == nullptr) 
+			return;
+
+		File file(UNDEF_ITEMLIST, File::READ);
+		if(!file.IsOpen()) {
+			UndefItemFileExists = false;
+			return;
+		}
+		std::string line;
+		LineReader reader(file);
+
+		UndefItemFileLenght = 0; //reset file lenght if called again
+		u32 lineNumber = 0;
+		int count = 0;
+
+	//Read all lines in file
+		for(; reader(line); lineNumber++) {
+		//If line is empty, skip it
+			if(line.empty())
+				continue;
+
+			std::string lowcaseInput(line);
+			for(char& c : lowcaseInput)
+				c = std::tolower(c);
+
+			std::string Name = lowcaseInput.substr(5, 30); //lets make max 30 for now
+			std::string SID = lowcaseInput.substr(0, 4); 
+			Item ID = (Item)StringToHex<u16>(SID, 0xFFFF);
+			out->Name.push_back(Name);
+			out->ID.push_back(ID);
+			UndefItemFileLenght++; //adds to file lenght to know how many items are in it
 		}
 	}
 
