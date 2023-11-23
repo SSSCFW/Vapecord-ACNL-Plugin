@@ -8,6 +8,9 @@
 #define PATH_FWKCOLOR       "E:/Vapecord/Data/FWKColors.txt"
 #define PATH_CUSTOMCOLOR    "E:/Vapecord/Data/color.txt"
 
+#define UNDEF_ITEMLIST      "E:/Vapecord/Data/undefined_item.txt"
+#define Character           "E:/Vapecord/Data/character.txt"
+
 #define PATH_JAPANESETEXT   "E:/Vapecord/Data/Language/japanese.txt"
 #define PATH_ENGLISHTEXT    "E:/Vapecord/Data/Language/english.txt"
 #define PATH_FRENCHTEXT     "E:/Vapecord/Data/Language/french.txt"
