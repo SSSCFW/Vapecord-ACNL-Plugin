@@ -80,9 +80,10 @@ namespace CTRPluginFramework {
 	// 強制帰還対策。乗っ取られたときにONにしてリロードする必要あり。常時ONだと帰れなくなる。
 	void CanceledReturn(MenuEntry *entry) {
 		if(entry->WasJustActivated()) 
-			Process::Patch(0x0032C2A4, 0xE12FFF1E);
-		else if(!entry->IsActivated())
-			Process::Patch(0x0032C2A4, 0xE92D43F8);
+			Process::Patch(0x00947E0C, 0x0);
+			Process::Patch(0x00947E08, 0x0404FF00);
+		//else if(!entry->IsActivated())
+		//	Process::Patch(0x0032C2A4, 0xE92D43F8);
 	}
 
 	// 漢字(文字)変換
