@@ -2,7 +2,8 @@
     "env": {
         "devkitpro" : "/opt/devkitpro",
         "devkitarm" : "C:/devkitPro/devkitARM",
-        "ctrulib" : "C:/devkitPro/libctru"
+        "ctrulib" : "C:/devkitPro/libctru",
+        "3ds-curl": "C:/devkitPro/portlibs/3ds/"
     },
     "configurations": [
         {
@@ -21,7 +22,8 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}/libctrpf/include/**",
-                    "C:/devkitPro/libctru/include/**"
+                    "C:/devkitPro/libctru/include/**",
+                    "${3ds-curl}/include/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

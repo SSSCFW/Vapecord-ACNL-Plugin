@@ -13,8 +13,16 @@
 #include <stdlib.h>
 #include "csvc.h"
 
+#include "common.hpp"
+#include "plgldr.h"
+#include "patches.hpp"
+#include "PatternManager.hpp"
+
 
 namespace CTRPluginFramework {
+	u64 titleID;
+    PluginHeader* pluginHeader = nullptr;
+
 	static const std::string Note = "Creator: Lukas#4444 (RedShyGuy) \n\n"
 									"Code Credits: Nico, Jay, Levi, Slattz, Kominost, Elominator and more \n\n"
 									"Translators: みるえもん(Japanese), im a book(spanish), Fedecrash02(italian), Youssef & Arisa(french), bkfirmen(german), Soopoolleaf(korean) \n\n"
@@ -192,6 +200,31 @@ Checks game version
 		return true;
 	}
 
+	
+    bool onPatchesOptionsFolderAction(MenuFolder& folder, ActionType type) {
+        if (type == ActionType::Opening) {
+            std::string statusString;
+            switch (getACNLPatchesStatus()) {
+            case PatternStatus::NotFound:
+                statusString = "ACNL patches status: Not available";
+                break;
+            case PatternStatus::NotActive:
+                statusString = "ACNL patches status: Not active";
+                break;
+            case PatternStatus::Active:
+                statusString = "ACNL patches status: Active";
+                break;
+            }
+
+            MenuEntry* statusEntry = new MenuEntry(statusString);
+            folder.Append(statusEntry);
+        } else if (type == ActionType::Closing) {
+            folder.Clear();
+        }
+
+        return true;
+    }
+
 /*
 Will set a counter at the start of the plugin as long as the title screen didn't load to
 prevent any issues with freezing of the plugin
@@ -258,9 +291,22 @@ prevent any issues with freezing of the plugin
 
 		menu->Callback(UpdateInstance);
 
+		MenuFolder* patchesOptionsFolder = new MenuFolder("Patches options");
+        patchesOptionsFolder->OnAction = onPatchesOptionsFolderAction;
+        menu->Append(patchesOptionsFolder);
+
 		menu->OnNewFrame = OnNewFrameCallback;
 
 		Process::exceptionCallback = CustomExceptionHandler;
+
+		PatternManager pm;
+		
+        titleID = Process::GetTitleID();
+        initPatches(pm, titleID);
+
+        pm.Perform();
+
+        enablePatches();
 
 	//Run Menu Loop
 		menu->Run();

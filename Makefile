@@ -22,7 +22,8 @@ SOURCES 	:= 	Sources \
 				Sources/Helpers \
 				Sources/Helpers/Personal \
 				Sources/Helpers/Other \
-				Sources/Plugin
+				Sources/Plugin \
+				Sources/Patch
 				
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -42,7 +43,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17 -Wno-psabi
 ASFLAGS		:=	$(ARCH)
 LDFLAGS		:= -T $(TOPDIR)/3gx.ld $(ARCH) -Os -Wl,--gc-sections,--strip-discarded,--strip-debug
 
-LIBS		:= -lctrpf -lcurl -lmbedtls -lmbedcrypto -lmbedx509 -lminizip -lctru -lz -lm
+LIBS		:= -lctrpf -lcurl -lmbedtls -lmbedcrypto -lmbedx509 -lctru -lminizip -lm -lz
 LIBDIRS		:= 	$(CTRPFLIB) $(CTRULIB) $(PORTLIBS)
 
 #---------------------------------------------------------------------------------
