@@ -1,6 +1,4 @@
 #include "cheats.hpp"
-#include "NonHacker.hpp"
-#include "RegionCodes.hpp"
 #include "Helpers/Game.hpp"
 #include "Helpers/PlayerClass.hpp"
 #include "Helpers/Player.hpp"
@@ -65,14 +63,19 @@ namespace CTRPluginFramework {
 	// かっぺいと会話中や駅にいるときだけゲーム速度を上昇させます。
 	// Increase the game speed only when you are in conversation with Kappei or at the station.
 	void OnlineFastGame(MenuEntry *entry) { 
-		static const Address speed(0x54DDB4, 0x54D2CC, 0x54CDFC, 0x54CDFC, 0x54C6E8, 0x54C6E8, 0x54C40C, 0x54C40C);
+		static Address speed(0x54DDB4);
 		u32 value;
 		Process::Read32(0x330A0AD8, value); //しずえ 41C00000
 		if (value == 0x1 || value == 0x3F19999A || value == 0x41300000 || value == 0x41C00000){
-			Process::Patch(speed.addr, GameHelper::GameSaving() ? 0xE59400A0 : 0xE3E004FF); 
+			if (Game::GameSaving()) {
+				speed.Unpatch();
+			}
+			else {
+				speed.Patch(0xE3E004FF);
+			}
 		}
 		else{
-			Process::Patch(speed.addr, 0xE59400A0);
+			speed.Unpatch();
 		}
 	}
 
@@ -219,7 +222,7 @@ namespace CTRPluginFramework {
 	}
 	
 
-
+/*
 //#################################################
 	// チャットのメッセージをスクリーンに表示
 	// Display chat messages on screen
@@ -303,6 +306,7 @@ namespace CTRPluginFramework {
 			OSD::Stop(messageOSD); 
 		}
 	}
+		*/
 //#################################################
 //#################################################
 	// アニメidをスクリーンに表示
@@ -367,7 +371,7 @@ namespace CTRPluginFramework {
 		}
 	}
 //#################################################
-
+/*
 	//draw x+6 y+10
 	// チャット ボタン表示関係
 	int ButtonList[5][3] = 
@@ -407,109 +411,8 @@ namespace CTRPluginFramework {
 		
 		return true;
 	}
-
+*/
 	static std::string Holder = "";
-
-	// チャットに便利なボタンを追加します。
-	// Add a convenient button to chat.
-	void ChatButton(MenuEntry *entry) {
-		static Address callchat(0x52440C, 0x523D60, 0x523454, 0x523454, 0x522D40, 0x522D40, 0x522A48, 0x522A48);
-
-		PluginMenu *menu = PluginMenu::GetRunningInstance();
-		if(entry->WasJustActivated()) {
-			//Process::Patch(Code::DisableChatRemoval.addr, 0xEA000000);
-
-			OSD::Run(DrawChatButton); 
-			if(!File::Exists(Utils::Format(PATH_CBOARD, regionName.c_str()))) 
-				File::Create(Utils::Format(PATH_CBOARD, regionName.c_str()));
-
-			Holder.clear();
-			File f_board(Utils::Format(PATH_CBOARD, regionName.c_str()), File::READ);
-			LineReader reader(f_board);
-			reader(Holder);
-			Holder.resize(65);
-			Holder.shrink_to_fit();
-
-			f_board.Flush();
-			f_board.Close();
-		}
-		else if(!entry->IsActivated()) {
-			//Process::Patch(Code::DisableChatRemoval.addr, 0xE5900000);
-			OSD::Stop(DrawChatButton); 
-		}
-		if (Controller::IsKeyPressed(Touchpad) && GameKeyboard::IsOpen())
-		{
-			int ButtonID = TouchButton();
-			switch (ButtonID) {
-				case 1: // Copy
-					{
-						Holder.clear();
-						if (GameKeyboard::CopySelected(Holder)) {
-							File::Remove(Utils::Format(PATH_CBOARD, regionName.c_str()));
-							File::Create(Utils::Format(PATH_CBOARD, regionName.c_str()));
-
-							File f_board(Utils::Format(PATH_CBOARD, regionName.c_str()), File::WRITE);
-
-							LineWriter writer(f_board);
-							writer << Holder;
-							writer.Flush();
-							writer.Close();
-
-							f_board.Flush();
-							f_board.Close();
-							OSD::Notify("Copied", Color(0xFF0077FF));
-						}
-					}
-					break;
-				case 2: // Paste
-					{
-						Holder.clear();
-						File f_board(Utils::Format(PATH_CBOARD, regionName.c_str()), File::READ);
-						LineReader reader(f_board);
-						reader(Holder);
-						Holder.resize(65);
-						Holder.shrink_to_fit();
-
-						f_board.Flush();
-						f_board.Close();
-
-						GameKeyboard::Write(Holder);
-					}
-					break;
-				case 3: // Cut
-					{
-						Holder.clear();
-						if (GameKeyboard::CopySelected(Holder)){
-							GameKeyboard::DeleteSelected();
-
-							File::Remove(Utils::Format(PATH_CBOARD, regionName.c_str()));
-							File::Create(Utils::Format(PATH_CBOARD, regionName.c_str()));
-
-							File f_board(Utils::Format(PATH_CBOARD, regionName.c_str()), File::WRITE);
-							
-							LineWriter writer(f_board);
-							writer << Holder;
-							writer.Flush();
-							writer.Close();
-
-							f_board.Flush();
-							f_board.Close();
-
-							OSD::Notify("Cut", Color(0x00FF6FFF));
-						}
-					}
-					break;
-				case 4: // Delete
-					GameKeyboard::Delete();
-					break;
-				case 5: // Send
-					callchat.Call<void>(1, 2);
-					break;
-				default:
-					break;
-			}
-		}
-	}
 
 	u8 b_AnimID = 0x1;
 	u8 a_AnimID2 = 0x9D;
@@ -548,16 +451,16 @@ namespace CTRPluginFramework {
 		static u32 wX4, wY4;
 		//(PlayerClass::GetInstance(pID)->GetWorldCoords(&x, &y))
 		if (PlayerClass::GetInstance()->GetWorldCoords(&wX, &wY) && *PlayerClass::GetInstance()->GetAnimation() == b_AnimID) {
-			Animation::ExecuteAnimationWrapper(0, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, IDList::ItemValid(a_ItemID2) ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX, wY, 1, a_AppearanceID2);
+			Animation::ExecuteAnimationWrapper(0, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, a_ItemID2.isValid() ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX, wY, 1, a_AppearanceID2);
 		}
 		if (PlayerClass::GetInstance(1)->GetWorldCoords(&wX2, &wY2) && *PlayerClass::GetInstance(1)->GetAnimation() == b_AnimID) {
-			Animation::ExecuteAnimationWrapper(1, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, IDList::ItemValid(a_ItemID2) ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX2, wY2, 1, a_AppearanceID2);
+			Animation::ExecuteAnimationWrapper(1, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, a_ItemID2.isValid() ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX2, wY2, 1, a_AppearanceID2);
 		}
 		if (PlayerClass::GetInstance(2)->GetWorldCoords(&wX3, &wY3) && *PlayerClass::GetInstance(2)->GetAnimation() == b_AnimID) {
-			Animation::ExecuteAnimationWrapper(2, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, IDList::ItemValid(a_ItemID2) ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX3, wY3, 1, a_AppearanceID2);
+			Animation::ExecuteAnimationWrapper(2, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, a_ItemID2.isValid() ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX3, wY3, 1, a_AppearanceID2);
 		}
 		if (PlayerClass::GetInstance(3)->GetWorldCoords(&wX4, &wY4) && *PlayerClass::GetInstance(3)->GetAnimation() == b_AnimID) {
-			Animation::ExecuteAnimationWrapper(3, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, IDList::ItemValid(a_ItemID2) ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX4, wY4, 1, a_AppearanceID2);
+			Animation::ExecuteAnimationWrapper(3, IDList::AnimationValid(a_AnimID2) ? a_AnimID2 : 0x06, a_ItemID2.isValid() ? a_ItemID2 : Item{0x2001, 0}, a_EmoteID2, a_SnakeID2, a_SoundID2, 0, wX4, wY4, 1, a_AppearanceID2);
 		}
 	}
 
@@ -581,29 +484,33 @@ namespace CTRPluginFramework {
 
 	void IsabelleSkip(MenuEntry *entry) {
 		// FastGameSpeed
-		static const Address speed(0x54DDB4, 0x54D2CC, 0x54CDFC, 0x54CDFC, 0x54C6E8, 0x54C6E8, 0x54C40C, 0x54C40C);
+		static Address speed(0x54DDB4);
 
-		u8 roomID = GameHelper::RoomCheck();
+		u8 roomID = Game::GetRoom();
 		if(!entry->IsActivated()) {
 			if (on_run) OSD::Stop(SkipButton); 
-			Process::Patch(speed.addr, 0xE59400A0);
+			speed.Unpatch();
 			on_run = false;
 		}
 		else if (roomID == 0x63) { // Isabelle
-			Process::Patch(speed.addr, GameHelper::GameSaving() ? 0xE59400A0 : 0xE3E004FF); 
-
+			if (Game::GameSaving()) {
+				speed.Unpatch();
+			}
+			else {
+				speed.Patch(0xE3E004FF);
+			}
 			if (!on_run) OSD::Run(SkipButton); 
 			
 			on_run = true;
 			if (Controller::IsKeyPressed(Touchpad) && TouchSkipButton()) {
-				static Address roomfunc(0x304A60, 0x304C68, 0x304AEC, 0x304AEC, 0x304A94, 0x304A94, 0x304A3C, 0x304A3C);	
+				static Address roomfunc(0x304A60);	
 				roomfunc.Call<u32>(0, 1, 1, 0);
 			}
 		}
 		else {
 			if (on_run){
 				OSD::Stop(SkipButton);
-				Process::Patch(speed.addr, 0xE59400A0);
+				speed.Unpatch();
 				on_run = false;
 			}
 		}
@@ -635,7 +542,7 @@ namespace CTRPluginFramework {
 	}
 
 	static std::vector<std::string> discord_text = { "", "", "", "" };
-
+/*
 	void GetMessage_p1_discord(void) {	
 		NonHacker *nHack1 = new NonHacker(0);
 		std::string PlayerText1 = nHack1->GetPlayerMessage();
@@ -679,6 +586,7 @@ namespace CTRPluginFramework {
 		discord_text[3] = text;
 		delete nHack4;
 	}
+		
 
 	//discordにチャットを送信
 	void SendDiscordMessage(MenuEntry *entry) {
@@ -697,6 +605,6 @@ namespace CTRPluginFramework {
 			*menu -= GetMessage_p3_discord;
 			*menu -= GetMessage_p4_discord;
 		}
-	}
+	}*/
 
 }

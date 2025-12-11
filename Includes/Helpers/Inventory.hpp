@@ -1,5 +1,4 @@
-#ifndef INVENTORY_HPP
-#define INVENTORY_HPP
+#pragma once
 
 #include <CTRPluginFramework.hpp>
 #include "Helpers/GameStructs.hpp"
@@ -25,7 +24,7 @@ namespace CTRPluginFramework {
 
 	namespace Inventory {
 		u32 		GetCurrentItemData(int i = 0);
-		bool 		GetNextItem(Item itemID, u8 &slot);
+		bool 		GetNextItem(Item itemID, u8 &slot, bool ignoreFlag = false);
 		bool 		GetNextClosetItem(Item itemID, u8 &slot);
 		bool 		GetSelectedSlot(u8& slot);
 		bool 		GetHoveredSlot(u8& slot);
@@ -43,4 +42,3 @@ namespace CTRPluginFramework {
 	int ItemSearch(const std::string& match, ItemVec& out);
 	std::string ItemIDSearch(Item ItemID);
 }
-#endif

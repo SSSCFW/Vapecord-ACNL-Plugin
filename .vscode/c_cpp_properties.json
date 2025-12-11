@@ -1,8 +1,8 @@
 {
     "env": {
-        "devkitpro" : "/opt/devkitpro",
-        "devkitarm" : "C:/devkitPro/devkitARM",
-        "ctrulib" : "C:/devkitPro/libctru",
+        "devkitpro": "/opt/devkitpro",
+        "devkitarm": "C:/devkitPro/devkitARM",
+        "ctrulib": "C:/devkitPro/libctru",
         "3ds-curl": "C:/devkitPro/portlibs/3ds/"
     },
     "configurations": [
@@ -13,15 +13,18 @@
                 "C:/devkitPro/devkitARM/arm-none-eabi/include/**",
                 "C:/devkitPro/devkitARM/lib/**",
                 "C:/devkitPro/libctru/include",
-                "${workspaceFolder}/libctrpf/include",
+                "C:/devkitPro/libctrpf/include",
                 "C:/devkitPro/portlibs/3ds/bin",
-                "${workspaceFolder}/includes"
+                "${workspaceFolder}/includes",
+                "C:/devkitPro/portlibs/3ds/include"
             ],
-            "defines": ["ARM11", "_3DS"],
+            "defines": [
+                "ARM11",
+                "_3DS"
+            ],
             "compilerPath": "C:/devkitPro/devkitARM/bin/arm-none-eabi-g++.exe",
             "browse": {
                 "path": [
-                    "${workspaceFolder}/libctrpf/include/**",
                     "C:/devkitPro/libctru/include/**",
                     "${3ds-curl}/include/**"
                 ],
@@ -30,7 +33,7 @@
             },
             "cStandard": "c11",
             "cppStandard": "gnu++20",
-            "intelliSenseMode": "gcc-arm"  
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4

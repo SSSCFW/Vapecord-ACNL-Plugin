@@ -29,8 +29,7 @@ FUNCTION    BGRHook
     BX          LR                  @return
 
 FUNCTION    MoveFurn
-    LDR         R0, =IsIndoorsBool  @data which holds check for if indoors
-    LDRSB       R0, [R0]   
+    BL          __IsIndoors  @data which holds check for if indoors 
     BX          LR
 
 FUNCTION    PATCH_MoveFurnButton
@@ -153,3 +152,11 @@ FUNCTION    SetMouthExpression
     POP         {R0}
     MOV         R4, R0
     POP         {PC}    
+
+FUNCTION    SetProperParticle
+    PUSH        {R0-R3, LR}
+    BL          __IsPuzzleLeagueRoom
+    CMP         R0, #1
+    LDREQ       R12, [SP, #0x84] @+0x14 due to stack changes (preserve LR and R0-R3)
+    MOVNE       R12, #0
+    POP         {R0-R3, PC}

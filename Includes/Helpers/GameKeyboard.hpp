@@ -1,5 +1,4 @@
-#ifndef CHAT_HPP
-#define CHAT_HPP
+#pragma once
 
 #include <CTRPluginFramework.hpp>
 #include "Helpers/GameStructs.hpp"
@@ -7,6 +6,7 @@
 namespace CTRPluginFramework {
 	namespace GameKeyboard {
 		bool 				Write(const std::string& str);
+		bool 				Delete(void);
 		bool		 		CopySelected(std::string& str);
 		bool 				Delete(void);
 		bool 				DeleteSelected(void);
@@ -17,4 +17,3 @@ namespace CTRPluginFramework {
 		void 				SendMessage(const std::string& str);
 	}
 }
-#endif
