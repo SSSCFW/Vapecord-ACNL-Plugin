@@ -37,7 +37,7 @@ namespace CTRPluginFramework {
 		SAVEC->Append(new MenuEntryExtras("CARAVAN_SET", nullptr, caravanchange, "CARAVAN_SET_NOTE")),
 		SAVEC->Append(new MenuEntryExtras("CAMPING_SET", nullptr, SetCampingVillager, "CAMPING_SET_NOTE")),
 		SAVEC->Append(new MenuEntryExtras("SHOP_UPGRADE", nullptr, shopunlocks, "SHOP_UPGRADE_NOTE")),
-	//SAVEC->Append(new MenuEntryExtras("HOUSE_EDITOR_NAME", nullptr, HouseChanger, "HOUSE_EDITOR_NOTE")),
+		SAVEC->Append(new MenuEntryExtras("HOUSE_EDITOR_NAME", nullptr, HouseChanger, "HOUSE_EDITOR_NOTE")),
 		SAVEC->Append(new MenuEntryExtras("BUILDING_MOD_NAME", nullptr, BuildingMod, "BUILDING_MOD_NOTE")),
 		SAVEC->Append(new MenuEntryExtras("FILL_MUSEUM_NAME", nullptr, CompleteMuseum, "FILL_MUSEUM_NOTE")),
 		SAVEC->Append(new MenuEntryExtras("MAYOR_PERMIT_NAME", Permit100, "MAYOR_PERMIT_NOTE")),
@@ -440,8 +440,7 @@ namespace CTRPluginFramework {
 		//ADDON->Append(new MenuEntry("soc memory exit", nullptr, soc_memory_exit, "")),
 		menu->Append(ADDON);
 
-	
-		////////////////////////
+	////////////////////////
 	/*Default Codes Folder*/
 	////////////////////////
 		MenuFolder *DEFAULTC = new MenuFolder("Default Codes");

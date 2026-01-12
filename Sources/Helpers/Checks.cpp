@@ -10,6 +10,11 @@
 #include "Helpers/Checks.hpp"
 #include "RuntimeContext.hpp"
 
+extern "C" bool __IsAnimID(u8 toolAnimID) {
+	static const u8 toolAnimIDArr[18] = { 0xB0, 0x49, 0x55, 0x6C, 0xA0, 0x98, 0x8F, 0x91, 0xC3, 0xCE, 0xCF, 0x8D, 0x8E, 0x91, 0xB1, 0xB1, 0x70, 0x9A };
+	return std::find(std::begin(toolAnimIDArr), std::end(toolAnimIDArr), toolAnimID) != std::end(toolAnimIDArr);
+}
+
 extern "C" bool __IsPlayerHouse() {
 	u8 pID = (u8)CTRPluginFramework::Player::GetPlayerStatus(4);
 	u8 stageID = CTRPluginFramework::Player::GetRoom(4);
@@ -31,8 +36,19 @@ extern "C" bool __IsPlayerHouse() {
 }
 
 namespace CTRPluginFramework {
+	void CheckInvalidBadge(u32 data, u32 badge, int badgeType, u32 r3, u32 r4) {
+		if (badgeType > 3) {
+			OSD::Notify("Invalid Badge Type! Can't display badge properly.", Color::Red);
+			return;
+		}
+
+		const HookContext &curr = HookContext::GetCurrent();
+		static Address func = Address::decodeARMBranch(curr.targetAddress, curr.overwrittenInstr);
+		func.Call<void>(data, badge, badgeType, r3, r4);
+	}
+
 //Hook invalid pickup
-	u32 InvalidPickStop(u8 ID, Item *ItemToReplace, Item *ItemToPlace, Item *ItemToShow, u8 worldx, u8 worldy) {	
+	u32 InvalidPickStop(u8 ID, Item *ItemToReplace, Item *ItemToPlace, Item *ItemToShow, u8 worldx, u8 worldy) {
 		if(ItemToReplace->isValid()) {
 			if((ID == 0xA) || (ID == 0x12) || (ID == 0x13)) {
 				if(ItemToPlace->ID == 0x7FFE) {
@@ -78,7 +94,7 @@ namespace CTRPluginFramework {
 	}
 //Hook for hole check
 	bool InvalidHoleStop(Item* item, Item Hole) {
-		if(RuntimeContext::getInstance()->isIndoors()) {
+		if(Player::IsIndoors()) {
 			return true;
 		}
 		
@@ -124,7 +140,30 @@ namespace CTRPluginFramework {
 		return false;
 	}
 
-	void NameFunc(u32 r0, u32 r1, u32 r2) {		
+	void SetHoveredItemName(u32 r0, u32 r1, u32 r2, u32 r3) {
+		Item itemslotid = {0x7FFE, 0};
+		u8 slot = 0;
+
+		if(Inventory::GetHoveredSlot(slot)) {
+			if(Inventory::ReadSlot(slot, itemslotid)) {
+				itemslotid.Flags = 0;
+				if(Game::IsOutdoorItem(itemslotid) || itemslotid.ID == 0x3729) {
+					std::string name = itemslotid.GetName();
+					Process::Write32(r1 + 0x18, 0x000E000E);
+					Process::Write32(r1 + 0x1C, 0x00040000);
+					Process::Write32(r1 + 0x20, 0xCD030100);
+
+					Process::WriteString(r1 + 0x24, itemslotid.isValid(false) ? name : "Invalid Item", StringFormat::Utf16);				
+				}
+			}
+		}
+
+		const HookContext &curr = HookContext::GetCurrent();
+        static Address func = Address::decodeARMBranch(curr.targetAddress, curr.overwrittenInstr);
+        func.Call<void>(r0, r1, r2, r3);
+	}
+
+	void SetItemName(u32 r0, u32 r1, u32 r2) {		
 		Item itemslotid = {0x7FFE, 0};
 		u8 slot = 0;
 
@@ -242,6 +281,7 @@ namespace CTRPluginFramework {
 			case 0x33B4: //Long Sleeve Dress
 				return "icn_385";
 
+			/*
 			case 0x22: //tree (growing 1)
 			case 0x23: //tree (growing 2)
 			case 0x24: //tree (growing 3)
@@ -278,8 +318,10 @@ namespace CTRPluginFramework {
 
 			case 0xCD: //rafflesia
 				return "icn_prsnt_04";
+			*/
 		}
 
+		/*
 		if (ItemID->ID >= 1 && ItemID->ID <= 6) { //wilted trees
 			return  "icn_prsnt2_06";
 		}
@@ -311,6 +353,7 @@ namespace CTRPluginFramework {
 		if (ItemID->ID >= 0x98 && ItemID->ID <= 0x9C) { //rocks
 			return "icn_prsnt_02";
 		}
+		*/
 
 		const HookContext &curr = HookContext::GetCurrent();
 		static Address func = Address::decodeARMBranch(curr.targetAddress, curr.overwrittenInstr);

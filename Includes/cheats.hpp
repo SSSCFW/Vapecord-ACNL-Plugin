@@ -267,6 +267,8 @@ namespace CTRPluginFramework {
 	void DisableAllChecks(void);
 	void DisableAllPatches(void);
 
+	void CheckInvalidBadgeEntry(MenuEntry *entry);
+	void SeedItemLegitimacyEntry(MenuEntry *entry);
 	void OnlineDropLagRemoverEntry(MenuEntry *entry);
     void ChangeRockbreakParticleEntry(MenuEntry *entry);
     void DropItemsEverywhereEntry(MenuEntry *entry);
@@ -292,7 +294,7 @@ namespace CTRPluginFramework {
     void SetDropRules(MenuEntry *entry);
     void SetPlantRules(MenuEntry *entry);
     void FixParticlesInPuzzleLeague(MenuEntry *entry);
-    void SetCustomSpritesForSeedItemsAndProDesigns(MenuEntry *entry);
+    void SetCustomSpritesForProDesigns(MenuEntry *entry);
 	void FruitStackingCheck(MenuEntry *entry);
 
 	void SetLanguageEntry(MenuEntry *entry);

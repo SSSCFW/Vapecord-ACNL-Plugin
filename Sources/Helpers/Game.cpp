@@ -105,16 +105,15 @@ namespace CTRPluginFramework {
 		static const Address d_mail(0x983050);
 		return *(u32 *)d_mail.addr;
 	}*/
-//get GameType
-	u8 Game::GetGameType() {
+
+	Game::GameMode Game::GetGameMode() {
 		static Address gtype(0x305ED8);
-		return gtype.Call<u8>();
+		return gtype.Call<Game::GameMode>();
 	}
 
-//Change GameType
-	void Game::ChangeGameType(u8 GameType) {
+	void Game::ChangeGameMode(Game::GameMode gameMode) {
 		static Address gtype(0x625B88);
-		gtype.Call<void>(GameType);
+		gtype.Call<void>(gameMode);
 	}
 
 //call menu
@@ -434,12 +433,14 @@ namespace CTRPluginFramework {
 
 //get map boolen pointer
 	bool Game::MapBoolCheck() {
-		return *(bool *)Address(0x950C30).addr;
+		static const Address mapBool(0x950C30);
+		return *(bool *)mapBool.addr;
 	}
 
 //Get online index
 	u8 Game::GetOnlinePlayerIndex() {
-		return Address(0x305EF0).Call<u8>();
+		static Address playerIndex(0x305EF0);
+		return playerIndex.Call<u8>();
 	}
 
 //Get actual index
@@ -492,7 +493,7 @@ namespace CTRPluginFramework {
 		static const Address rem3(0x597FAC);
 		
 		if(removeEverything) {
-			if(!RuntimeContext::getInstance()->isIndoors()) {
+			if(!Player::IsIndoors()) {
 				x = 0x10;
 				y = 0x10;
 			}
@@ -540,7 +541,7 @@ namespace CTRPluginFramework {
 			res = true;
 			
 			if(removeEverything) {
-				y = !RuntimeContext::getInstance()->isIndoors() ? 0x10 : 0;
+				y = !Player::IsIndoors() ? 0x10 : 0;
 			}
 			else {
 				y = wY;
